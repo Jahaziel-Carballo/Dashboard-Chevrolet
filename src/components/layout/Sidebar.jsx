@@ -2,7 +2,7 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 // Importar el logo desde src/assets
-import chevroletLogo from '../../assets/chevrolet-logo.png';
+import chevroletLogo from '../../assets/Chevrolet-Logo.png';
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
@@ -55,7 +55,7 @@ export default function Sidebar() {
             <img 
               src={chevroletLogo} 
               alt="Chevrolet"
-              className="w-8 h-8 object-contain filter brightness-0 invert"
+              className="w-10 h-10 object-contain"
               onError={(e) => {
                 // Fallback si la imagen no carga
                 e.target.style.display = 'none';

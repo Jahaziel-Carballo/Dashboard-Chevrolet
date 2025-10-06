@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import chevroletLogo from '../assets/chevrolet-logo.png';
+import chevroletLogo from '../assets/Chevrolet-Logo.png';
 
 export default function Login() {
   const { login, signup, error, clearError, loading, user } = useAuth();
@@ -100,7 +100,7 @@ export default function Login() {
               <img 
                 src={chevroletLogo} 
                 alt="Chevrolet"
-                className="w-10 h-10 object-contain filter brightness-0 invert"
+                className="w-12 h-12 object-contain"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   const fallback = e.target.parentElement.querySelector('.logo-fallback');
