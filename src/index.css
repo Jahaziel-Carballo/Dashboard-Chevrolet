@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reseteamos body y root para que ocupen toda la pantalla */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* 👇 Eliminamos estilos de la plantilla Vite que causaban problemas */
+/* Dejamos lo mínimo necesario para un layout limpio */
