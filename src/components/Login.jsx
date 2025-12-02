@@ -271,12 +271,12 @@ export default function Login() {
             <div className="group">
               <p className="text-gray-400 italic text-sm font-light text-center py-1 transition-all duration-500">
                 Developed by{' '}
-                <span className="font-medium text-gray-300 group-hover:text-cyan-300 transition-colors duration-300">
+                <span className="font-medium text-gray-300 group-hover:text-white-300 transition-colors duration-300">
                   Jahaziel García
                 </span>
               </p>
               {/* Línea sutil que aparece al hacer hover */}
-              <div className="w-0 h-0.5 bg-cyan-400 mx-auto mt-1 group-hover:w-16 transition-all duration-500 ease-out opacity-0 group-hover:opacity-70"></div>
+              <div className="w-0 h-0.5 bg-gray-100 mx-auto mt-1 group-hover:w-16 transition-all duration-500 ease-out opacity-0 group-hover:opacity-70"></div>
             </div>
           </div>
         </div>

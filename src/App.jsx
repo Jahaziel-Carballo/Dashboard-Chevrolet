@@ -1,5 +1,5 @@
 // src/App.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppProvider, useApp } from './contexts/AppContext';
 import MainLayout from './components/layout/MainLayout';
 import FileUploadZone from './components/dashboard/FileUploadZone';
@@ -16,6 +16,55 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './components/Login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Componente simple para recordatorio de pantalla completa
+function FullscreenHint() {
+  const [showHint, setShowHint] = useState(false);
+
+  return (
+    <>
+      <div className="relative">
+        <button
+          onClick={() => setShowHint(!showHint)}
+          onMouseEnter={() => setShowHint(true)}
+          onMouseLeave={() => setShowHint(false)}
+          className="px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2 group"
+          title="Pantalla completa disponible (F11)"
+        >
+          <svg className="w-4 h-4 text-gray-600 group-hover:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+          </svg>
+          <span>Pantalla Completa</span>
+        </button>
+
+        {/* Tooltip que aparece al hover o click */}
+        {showHint && (
+          <div className="absolute right-0 top-full mt-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl p-3 z-50 animate-fade-in border border-gray-700">
+            <div className="flex items-start gap-2">
+              <div className="w-5 h-5 bg-amber-400/20 rounded flex items-center justify-center flex-shrink-0">
+                <svg className="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-medium mb-1">Usa pantalla completa nativa</p>
+                <p className="text-gray-300 text-xs mb-2">
+                  Presiona <kbd className="px-2 py-1 bg-gray-800 rounded border border-gray-700 font-mono">F11</kbd> para entrar/salir
+                </p>
+                <p className="text-gray-400 text-xs">
+                  Chrome, Edge, Brave: F11<br />
+                  Mac: ⌘ + Shift + F
+                </p>
+              </div>
+            </div>
+            {/* Flecha del tooltip */}
+            <div className="absolute -top-1 right-4 w-3 h-3 bg-gray-900 transform rotate-45 border-t border-l border-gray-700"></div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
 
 function DashboardContent() {
   const { state, dispatch } = useApp();
@@ -43,8 +92,42 @@ function DashboardContent() {
     }
   };
 
+  // Detectar si estamos en pantalla completa nativa
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+
+  useEffect(() => {
+    const checkFullscreen = () => {
+      setIsNativeFullscreen(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+      );
+    };
+
+    document.addEventListener('fullscreenchange', checkFullscreen);
+    document.addEventListener('webkitfullscreenchange', checkFullscreen);
+    document.addEventListener('mozfullscreenchange', checkFullscreen);
+    document.addEventListener('MSFullscreenChange', checkFullscreen);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', checkFullscreen);
+      document.removeEventListener('webkitfullscreenchange', checkFullscreen);
+      document.removeEventListener('mozfullscreenchange', checkFullscreen);
+      document.removeEventListener('MSFullscreenChange', checkFullscreen);
+    };
+  }, []);
+
   return (
     <div className="space-y-8">
+      {/* Indicador sutil cuando está en pantalla completa nativa */}
+      {isNativeFullscreen && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-900/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs flex items-center gap-2 z-50 border border-gray-700">
+          <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+          Pantalla completa activa • F11 para salir
+        </div>
+      )}
+
       {/* Sección de Subida de Archivos */}
       {!state.currentData && (
         <div className="max-w-4xl mx-auto">
@@ -88,6 +171,9 @@ function DashboardContent() {
             </div>
 
             <div className="flex gap-2 flex-shrink-0">
+              {/* Botón de Recordatorio de Pantalla Completa */}
+              <FullscreenHint />
+
               {/* Botón de Nuevo Análisis */}
               <button
                 onClick={() => window.location.reload()}
